@@ -24,16 +24,16 @@ class UserDetailSeeder extends Seeder
         for ($i = 0; $i < 20; $i++) {
             # code...
             DB::table('users')->insert([
-                'name' => Str::random(10),
+                'name' => 'admin_'.$i++,
                 'email' => 'admin-' . $i++ . '@gmail.com',
                 'password' => Hash::make('admin12345'),
             ]);
         }
 
         DB::table('users')->insert([
-            'name' => Str::random(10),
-            'email' => 'admin' . '@gmail.com',
-            'password' => Hash::make('admin12345'),
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('Admin@1234'),
         ]);
     }
 }

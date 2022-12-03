@@ -35,5 +35,7 @@ class UserDetailSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => Hash::make('Admin@1234'),
         ]);
+
+        Artisan::call('')
     }
 }

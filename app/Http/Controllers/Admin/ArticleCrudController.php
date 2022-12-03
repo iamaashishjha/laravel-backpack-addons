@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use ReflectionClass;
+use Illuminate\Support\Str;
+use App\Http\Requests\ArticleRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use App\Http\Requests\ArticleRequest;
 
 class ArticleCrudController extends CrudController
 {
@@ -28,6 +30,7 @@ class ArticleCrudController extends CrudController
         $this->crud->setModel(\Backpack\NewsCRUD\app\Models\Article::class);
         $this->crud->setRoute(config('backpack.base.route_prefix', 'admin') . '/article');
         $this->crud->setEntityNameStrings('article', 'articles');
+        checkCRUDPermission($this->crud);
 
         /*
         |--------------------------------------------------------------------------
@@ -40,13 +43,12 @@ class ArticleCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-
         $this->crud->addColumn('title');
         $this->crud->addColumn([
             'name' => 'date',
@@ -115,7 +117,7 @@ class ArticleCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -153,13 +155,6 @@ class ArticleCrudController extends CrudController
             'type' => 'browse',
         ]);
         $this->crud->addField([
-            // 'label' => 'Category',
-            // 'type' => 'relationship',
-            // 'name' => 'category_id',
-            // 'entity' => 'category',
-            // 'attribute' => 'name',
-            // 'inline_create' => true,
-            // 'ajax' => true,
 
             'label'     => 'Category', // Table column heading
             'type'      => 'select2',
@@ -237,12 +232,16 @@ class ArticleCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
     protected function setupUpdateOperation()
     {
+        // dd(backpack_user()->hasPermissionTo('edit articles'), $this->crud->denyAccess(['create', 'update']));
+        // if(!backpack_user()->hasPermissionTo('edit articles')){
+        //     $this->crud->denyAccess(['update', 'edit']);
+        // }
 
         $this->setupCreateOperation();
         $this->crud->removeField([
